@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanji Damage Quiz</title>
+
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    
+    <div class="content">
+    <!-- 1 -->
+
+         <div class="timerOutput"><p class="hours"></p><p class="minutes">:</p><p class="seconds">:</p></div>
+         <button id="report">Report</button>
+
+        <button id="btn_start" class="circle-btn">Start</button>
+
+        <div id="kanji_character"></div>
+
+        <div id="choices">
+            <div class="c_bar"></div>
+            <div class="c_bar"></div>
+            <div class="c_bar"></div>
+            <div class="c_bar"></div>
+        </div>
+
+        <div class="initial_settings">
+            <p>Kanji Start</p>    <input value="594"  type="number" id="index_start" class="blue_input ipts_gen_style">
+            <p>Test Count</p>    <input value="10"  type="number" id="test_count" class="green_input ipts_gen_style">
+            <br><br>
+            <button id="btn_save" class="other_btns">Save</button>
+        </div>
+        
+        <div id="answerd_counts">
+            <div id="quiz_count">
+                <div id="current_quiz"></div>
+                <div id="total_quiz"></div>
+            </div>
+            <div id="right_wrong">
+                <div id="right_answer"></div>
+                <div id="wrong_answer"></div>
+            </div>
+            <div id="right_kanji_mean">
+                <p id="prev_kanji"></p><p> : </p><p id="prev_kanji_ans"></p>
+            </div>
+        </div>
+
+        <div id="answer_history">  
+            <button id="see_btn">See Last Quiz Answer</button>
+            <div class="answer_data">
+                <table class="ans_list">
+                    
+                </table>
+            </div>
+        </div>
+
+        <div class="bottom_bar">heloooo</div>
+        
+    <!-- 1 -->
+
+    <!-- Scripts -->
+    <script src="kanjidata.js"></script>
+    <script src="quiz_functions/functions.js"></script>
+    <script src="quiz_functions/index.js"></script>
+</body>
+</html>

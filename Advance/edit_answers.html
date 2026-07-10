@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KD Meaning Edit</title>
+
+    <link rel="stylesheet" href="../index.css">
+    <style>
+        #list_view{
+            display: flex;
+            width: inherit;
+            justify-content: center;
+        }
+            #list_view .k_char{
+                width: 50px;
+            }
+            #list_view .kanji_q_list{
+                font-size: 3em;
+            }
+            #list_view .kanji_ans_list{
+                font-size: 2em;
+            }
+            #list_view .kanji_ans_ipt{
+                width: 190px;
+                height: 30px;
+                font-size: 1.5em ;
+                border-bottom: 3px solid black;
+            }
+            .btn_list{
+                height: 100px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+                .btn_functions{
+                    width: 150px;
+                    height: 50px;
+                    font-size: 2em;
+                    border-radius: 15px;
+                    border-bottom: solid black 8px;
+
+                }
+                    .btn_functions:hover{
+                        border-bottom: solid black 4px;
+                    }
+                        .pink_btn{
+                            background-color: #db756b;
+                        }
+                        .pink_btn:disabled{
+                            border: white;
+                        }
+                        .lightgreen_btn{
+                            background-color: #00ab7a;
+                        }
+                        .lightgreen_btn:disabled{
+                            border: white;
+                        }
+                        .yellon_btn{
+                            background-color: #ebb000;
+                        }
+                        .yellon_btn:disabled{
+                            border: white;
+                        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="initial_settings">
+            <p>Kanji Start</p>    <input type="number" value="1" id="kanji_start"  class="blue_input ipts_gen_style">
+            <p>Kanji Count</p>    <input type="number" value="5" id="kanji_count" class="green_input ipts_gen_style">
+            <!-- <p>Remove Radicals</p> <input type="checkbox" name="" id=""> -->
+            <br><br>
+
+            <div class="btn_list">
+                <button id="show_kanji" class="pink_btn btn_functions">Show</button>
+                <button id="save_changes" class="yellon_btn btn_functions" disabled>Save</button>
+                <button id="export_changes" class="lightgreen_btn btn_functions" disabled>Export</button>
+            </div>
+
+            <div id="list_view">
+                <table class="ans_list">
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../kanjidata.js"></script>
+    <script>
+        let kanji_start_ipt = document.getElementById("kanji_start");
+        let kanji_count_ipt = document.getElementById("kanji_count");
+        let show_kanji = document.getElementById("show_kanji");
+        let save_changes = document.getElementById("save_changes");
+        let export_changes = document.getElementById("export_changes");
+        let quiz_kanji = [];
+        let quiz_answer = [];
+        let index_correction = 0;
+        
+        let show_list = () => {
+            
+            save_changes.disabled = false;
+            quiz_kanji = [];
+            quiz_answer = [];
+
+            kanji_start = parseInt( kanji_start_ipt.value );
+            kanji_count = parseInt ( kanji_count_ipt.value );
+
+            index_correction = parseInt(kanji_start) -1;//correcting input(in code first question is started to 0)
+            if (index_correction > 583 && index_correction < 669) {// missing 2 numbers in official list (584 & 669)
+                index_correction--;
+            } else if (index_correction > 668) {
+                index_correction-=2;
+            }
+
+            let kanji_end = index_correction + kanji_count;
+
+            for (let i = index_correction; i < kanji_end; i++) {
+                quiz_kanji.push( kanji_character [i] );
+                quiz_answer.push( kanji_meaning [i] );
+            }
+
+            let tbl_dspy = document.getElementsByClassName("ans_list")[0];
+            tbl_dspy.innerHTML = "";
+
+            for (let i = 0; i < kanji_count; i++) {
+                let tbl_row = document.createElement("tr");
+                let td_array = [];
+
+                    let q_number = document.createElement("td");
+                    q_number.innerHTML = i+1;
+                    tbl_row.appendChild(q_number);
+
+                    let tbl_dt = document.createElement("td");
+                    tbl_dt.innerHTML = quiz_kanji[ i ];
+                    tbl_dt.className = "kanji_q_list";
+                    tbl_row.appendChild(tbl_dt);
+
+                    let tbl_dt_ipt = document.createElement("td");
+                        let txt_ipt = document.createElement("input");
+                        txt_ipt.type = "text";
+                        txt_ipt.value = quiz_answer[ i ];
+                        txt_ipt.className = "kanji_ans_ipt";
+                        tbl_dt_ipt.appendChild(txt_ipt);
+                    tbl_dt_ipt.className = "kanji_ans_td";
+                    tbl_row.appendChild(tbl_dt_ipt);
+
+               
+                tbl_dspy.appendChild(tbl_row);
+            }
+        }
+        show_kanji.onclick = show_list;
+
+        let save_it = () => {//saving changes
+            export_changes.disabled = false;
+            kanji_count = parseInt ( kanji_count_ipt.value );
+
+            let get_changes = document.getElementsByClassName("kanji_ans_ipt");
+            let item_count = get_changes.length
+
+           let change_start = index_correction;
+            for (let i = 0; i < item_count; i++) {
+                kanji_meaning[change_start] = get_changes[i].value;
+                change_start++
+            }
+            alert("saved");
+
+        }
+        save_changes.onclick = save_it;
+
+        let export_it = () => {//export changes
+            save_changes.disabled = true;
+            export_changes.disabled = true;
+            let new_kanji_char_list = "\n\nlet kanji_character = [";
+            let new_kanji_mean_list = "let kanji_meaning =[";
+
+            if (kanji_meaning[1253] == "polite \"do\"") {
+                kanji_meaning[1253] = "polite \\\"do\\\"";
+            }
+            if (kanji_meaning[1470] == "the honorific \"o\"") {
+                kanji_meaning[1470] = "the honorific \\\"o\\\"";
+            }
+
+            let dataCount = kanji_meaning.length;
+
+            
+            for (let i =0; i < dataCount; i++) {
+                new_kanji_char_list += "\""+ kanji_character[i] + "\",";
+                new_kanji_mean_list += "\"" + kanji_meaning[i] + "\",";
+            }
+            new_kanji_char_list = new_kanji_char_list.substring(0, new_kanji_char_list.length - 1);
+            new_kanji_mean_list = new_kanji_mean_list.substring(0, new_kanji_mean_list.length - 1);
+            new_kanji_char_list += "];";
+            new_kanji_mean_list += "];";
+
+            let data = new_kanji_mean_list + new_kanji_char_list ;
+            download(data,"kanjidata", "text/javascript");
+        } 
+        export_changes.onclick = export_it;
+
+        function download(data, filename, type) {
+            var file = new Blob([data], { type: type });
+            if (window.navigator.msSaveOrOpenBlob) // IE10+
+                window.navigator.msSaveOrOpenBlob(file, filename);
+            else { // Others
+                var a = document.createElement("a"),
+                    url = URL.createObjectURL(file);
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(function () {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 0);
+            }
+        }
+    </script>
+</body>
+</html>
