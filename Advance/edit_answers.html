@@ -97,15 +97,43 @@
         let quiz_kanji = [];
         let quiz_answer = [];
         let index_correction = 0;
+
+        let input_notvalid = () => {
+    
+            let not_valid_input = false;
+            start_kanji_index = parseInt(kanji_start_ipt.value);
+            quiz_total = parseInt(kanji_count_ipt.value);
+            let notif_message = "";
+
+            if (start_kanji_index < 1) {
+                notif_message = "Kanji Start : I don't want to edit anything\n";
+            }else if (start_kanji_index > 1768) {
+                notif_message = "Kanji Start : I thought theres more\n";
+            }
+            if (quiz_total < 1) {
+                notif_message += "Kanji Count : Do i really have something to change";
+            }else if (quiz_total > 1768) {
+                notif_message += "Kanji Count : Its not enough";
+            }
+            if (notif_message == "") {
+                return false;
+            }
+            alert(notif_message);
+            return true;
+        }
         
         let show_list = () => {
+
+            kanji_start = parseInt( kanji_start_ipt.value );
+            kanji_count = parseInt ( kanji_count_ipt.value );
+
+            if (input_notvalid()) {
+                return;
+            }
             
             save_changes.disabled = false;
             quiz_kanji = [];
             quiz_answer = [];
-
-            kanji_start = parseInt( kanji_start_ipt.value );
-            kanji_count = parseInt ( kanji_count_ipt.value );
 
             index_correction = parseInt(kanji_start) -1;//correcting input(in code first question is started to 0)
             if (index_correction > 583 && index_correction < 669) {// missing 2 numbers in official list (584 & 669)

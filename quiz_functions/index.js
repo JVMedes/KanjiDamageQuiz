@@ -27,8 +27,34 @@ let right_a_dspy = document.getElementById("right_answer");
 let wrong_a_dspy = document.getElementById("wrong_answer");
 let prev_kanji_dspy = document.getElementById("right_kanji_mean");
 
+let input_notvalid = () => {
+    
+    let not_valid_input = false;
+    start_kanji_index = parseInt(document.getElementById("index_start").value);
+    quiz_total = parseInt(document.getElementById("test_count").value);
+    let notif_message = "";
 
+    if (start_kanji_index < 1) {
+        notif_message = "Kanji Start : I don't know where to start\n";
+    }else if (start_kanji_index > 1768) {
+        notif_message = "Kanji Start : I need more\n";
+    }
+    if (quiz_total < 1) {
+        notif_message += "Test Count : I don't want to quiz";
+    }else if (quiz_total > 1768) {
+        notif_message += "Test Count : I wanna test all day long";
+    }
+    if (notif_message == "") {
+        return false;
+    }
+    alert(notif_message);
+    return true;
+}
 let starto = (event) => {
+    
+    if (input_notvalid()) {
+        return;
+    }
     
     quiz_kanji = [];// value initialize
     quiz_answer =[];
@@ -135,16 +161,4 @@ for (let i = 0; i < 4; i++) {
     get_q_btns[i].onclick = quiz_btns;
 }
 
-
-// settings function
-
-let saved_clicked =  (event) => {
-    
-    start_kanji_index = document.getElementById("index_start").value;
-    quiz_total = parseInt(document.getElementById("test_count").value);
-    alert("Saved");
-}
-
-let btn_save = document.getElementById("btn_save");
-btn_save.onclick = saved_clicked;
 
